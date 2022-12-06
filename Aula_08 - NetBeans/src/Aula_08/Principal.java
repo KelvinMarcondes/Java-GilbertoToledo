@@ -5,6 +5,7 @@
 package Aula_08;
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -14,13 +15,27 @@ import javax.swing.table.DefaultTableModel;
 public class Principal extends javax.swing.JFrame {
 
     ArrayList<Departamento> listDep;
+    ArrayList<Funcionario> listFunc;
     String modoDep;
     String modoFunc;
 
+    /**
+     * Creates new form Principal
+     */
+    public Principal() {
+        initComponents();
+        setLocationRelativeTo(null);
+        listDep = new ArrayList();
+        listFunc = new ArrayList();
+        modoDep = "Navegar";
+        modoFunc = "Navegar";
+        ManipulaInterfaceDep();
+        ManipulaInterfaceFunc();
+    }
+    
+    
     public void LoadTableDep() {
-
         DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Código", "Nome"}, 0);
-
         for (int i = 0; i < listDep.size(); i++) {
             Object linha[] = new Object[]{listDep.get(i).getCodigo(), listDep.get(i).getNome()};
             modelo.addRow(linha);
@@ -31,26 +46,27 @@ public class Principal extends javax.swing.JFrame {
         LoadCBDep();
     }
     
+        public void LoadTableFunc() {
+        DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Matrícula", "Nome", "Departamento"}, 0);
+        for (int i = 0; i < listFunc.size(); i++) {
+            Object linha[] = new Object[]{listFunc.get(i).getMatricula(), listFunc.get(i).getNome(), listFunc.get(i).getDep().getNome()};
+            modelo.addRow(linha);
+        }
+        tbl_func_funcs.setModel(modelo);
+        tbl_func_funcs.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tbl_func_funcs.getColumnModel().getColumn(1).setPreferredWidth(150);
+        tbl_func_funcs.getColumnModel().getColumn(2).setPreferredWidth(150);
+    }
+    
     public void LoadCBDep() {
         cb_func_dps.removeAllItems();
         cb_func_dps.addItem("Selecione");
         for (int i = 0; i < listDep.size(); i++) {
             cb_func_dps.addItem(listDep.get(i).getNome());
         }
-
     }
 
-    /**
-     * Creates new form Principal
-     */
-    public Principal() {
-        initComponents();
-        setLocationRelativeTo(null);
-        listDep = new ArrayList();
-        modoDep = "Navegar";
-    }
-
-    public void ManipulaInterfaceDep(String modoDep) {
+    public void ManipulaInterfaceDep() {
         switch (modoDep) {
             case "Navegar":
                 btn_dep_salvar.setEnabled(false);
@@ -105,7 +121,7 @@ public class Principal extends javax.swing.JFrame {
         }
     }
 
-    public void ManipulaInterfaceFunc(String modoFunc) {
+    public void ManipulaInterfaceFunc() {
         switch (modoFunc) {
             case "Navegar":
                 btn_func_salvar.setEnabled(false);
@@ -122,7 +138,7 @@ public class Principal extends javax.swing.JFrame {
                 btn_func_salvar.setEnabled(true);
                 btn_func_cancelar.setEnabled(true);
                 c_func_matricula.setEnabled(true);
-                c_func_nome.setEnabled(false);
+                c_func_nome.setEnabled(true);
                 btn_func_editar.setEnabled(false);
                 btn_func_excluir.setEnabled(false);
                 btn_func_novo.setEnabled(false);
@@ -373,7 +389,7 @@ public class Principal extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false
@@ -394,9 +410,9 @@ public class Principal extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tbl_func_funcs);
         if (tbl_func_funcs.getColumnModel().getColumnCount() > 0) {
-            tbl_func_funcs.getColumnModel().getColumn(0).setPreferredWidth(50);
+            tbl_func_funcs.getColumnModel().getColumn(0).setPreferredWidth(100);
             tbl_func_funcs.getColumnModel().getColumn(1).setPreferredWidth(150);
-            tbl_func_funcs.getColumnModel().getColumn(2).setPreferredWidth(50);
+            tbl_func_funcs.getColumnModel().getColumn(2).setPreferredWidth(150);
         }
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Departamento", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
@@ -565,7 +581,7 @@ public class Principal extends javax.swing.JFrame {
         }
         LoadTableDep();
         modoDep = "Navegar";
-        ManipulaInterfaceDep(modoDep);
+        ManipulaInterfaceDep();
         c_dep_codigo.setText("");
         c_dep_nome.setText("");
     }//GEN-LAST:event_btn_dep_salvarActionPerformed
@@ -578,14 +594,14 @@ public class Principal extends javax.swing.JFrame {
         c_dep_codigo.setText("");
         c_dep_nome.setText("");
         modoDep = "Novo";
-        ManipulaInterfaceDep(modoDep);
+        ManipulaInterfaceDep();
     }//GEN-LAST:event_btn_dep_novoActionPerformed
 
     private void btn_dep_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_dep_cancelarActionPerformed
         c_dep_codigo.setText("");
         c_dep_nome.setText("");
         modoDep = "Navegar";
-        ManipulaInterfaceDep(modoDep);
+        ManipulaInterfaceDep();
     }//GEN-LAST:event_btn_dep_cancelarActionPerformed
 
     private void tbl_dep_dptsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_dep_dptsMouseClicked
@@ -595,13 +611,13 @@ public class Principal extends javax.swing.JFrame {
             c_dep_codigo.setText(String.valueOf(D.getCodigo()));
             c_dep_nome.setText(D.getNome());
             modoDep = "Selecao";
-            ManipulaInterfaceDep(modoDep);
+            ManipulaInterfaceDep();
         }
     }//GEN-LAST:event_tbl_dep_dptsMouseClicked
 
     private void btn_dep_editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_dep_editarActionPerformed
         modoDep = "Editar";
-        ManipulaInterfaceDep(modoDep);
+        ManipulaInterfaceDep();
     }//GEN-LAST:event_btn_dep_editarActionPerformed
 
     private void btn_dep_excluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_dep_excluirActionPerformed
@@ -610,7 +626,7 @@ public class Principal extends javax.swing.JFrame {
             listDep.remove(index);
             LoadTableDep();
             modoDep = "Navegar";
-            ManipulaInterfaceDep(modoDep);
+            ManipulaInterfaceDep();
         }
     }//GEN-LAST:event_btn_dep_excluirActionPerformed
 
@@ -631,23 +647,51 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_c_func_matriculaActionPerformed
 
     private void btn_func_salvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_func_salvarActionPerformed
-        // TODO add your handling code here:
+        int index = cb_func_dps.getSelectedIndex();
+        if(index == 0){
+            JOptionPane.showMessageDialog(this, "Selecione um departamento válido.");
+        }
+        else{
+        Funcionario funcionario = new Funcionario();
+        funcionario.setMatricula(Integer.parseInt(c_func_matricula.getText()));
+        funcionario.setNome(c_func_nome.getText());
+        funcionario.setDep(listDep.get(index - 1));
+        
+        listFunc.add(funcionario);
+        listDep.get(index -1).addFunc(funcionario);
+        }
+        
+        LoadTableFunc();
+        modoFunc = "Navegar";
+        ManipulaInterfaceFunc();
     }//GEN-LAST:event_btn_func_salvarActionPerformed
 
     private void btn_func_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_func_cancelarActionPerformed
-        // TODO add your handling code here:
+        c_func_matricula.setText("");
+        c_func_nome.setText("");
+        modoFunc = "Navegar";
+        ManipulaInterfaceFunc();
     }//GEN-LAST:event_btn_func_cancelarActionPerformed
 
     private void btn_func_novoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_func_novoActionPerformed
-        // TODO add your handling code here:
+        c_func_matricula.setText("");
+        c_func_nome.setText("");
+        modoFunc = "Novo";
+        ManipulaInterfaceFunc();
     }//GEN-LAST:event_btn_func_novoActionPerformed
 
     private void btn_func_editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_func_editarActionPerformed
-        // TODO add your handling code here:
+        c_func_matricula.setText("");
+        c_func_nome.setText("");
+        modoFunc = "Editar";
+        ManipulaInterfaceFunc();
     }//GEN-LAST:event_btn_func_editarActionPerformed
 
     private void btn_func_excluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_func_excluirActionPerformed
-        // TODO add your handling code here:
+        c_func_matricula.setText("");
+        c_func_nome.setText("");
+        modoFunc = "Navegar";
+        ManipulaInterfaceFunc();
     }//GEN-LAST:event_btn_func_excluirActionPerformed
 
     /**
